@@ -1,0 +1,196 @@
+- name: Install basic packages
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Updating the system
+      become: True
+      apt:
+        name: "*"
+        state: latest
+        
+    - name: Install neovim depencies
+      become: True
+      apt:
+        name: software-properties-common
+        state: present
+
+    - name: Add neovim PPA
+      become: True
+      apt_repository:
+        validate_certs: yes
+        repo: 'ppa:neovim-ppa/stable'
+        state: present
+          
+    - name: Update apt cache
+      become: True
+      apt:
+        update_cache: yes
+          
+    - name: Installing basic packages
+      become: True
+      apt:
+        pkg:
+        # aesthetic
+        - lolcat
+        - figlet
+        - neofetch
+        - cowsay
+        # coding
+        - openjdk-17-jdk
+        - build-essential
+        - git
+        - texlive-full
+        - texstudio
+        - python3
+        - python3-pip
+        # utilities
+        - libreoffice
+        - telegram-desktop
+        - nmap
+        - tmux
+        - zoxide
+        - stow
+        - fonts-jetbrains-mono
+        - ripgrep
+        - thunderbird
+        - gnome-tweaks
+        - net-tools
+        - wireshark
+        - tshark
+        - tcpdump
+        - neovim
+        # virtualization
+        - qemu-kvm
+        - libvirt-clients
+        - libvirt-daemon-system
+        - bridge-utils
+        - virtinst
+        - libvirt-daemon
+        - virt-manager
+
+    - name: Install docker depencies
+      become: True
+      apt:
+        pkg:
+        - ca-certificates
+        - curl
+        - gnupg
+        - lsb-release
+
+    - name: Create directory for apt keyrings
+      become: True
+      file:
+        path: /etc/path/keyrings
+        state: directory
+
+    - name: Get docker repo gpg key
+      become: True
+      shell:
+        cmd: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+    - name: Add docker repo to apt list
+      become: True
+      shell:
+        cmd: echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+    - name: Update repo list
+      become: True
+      apt:
+        update_cache: yes
+
+    - name: Install docker packages
+      become: True
+      apt:
+        pkg:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+        - docker-compose-plugin
+
+    - name: Install rustup
+      shell:
+        cmd: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
+    - name: Install starship prompt
+      shell:
+        cmd: curl -sS https://starship.rs/install.sh | sh -s -- -y
+
+    - name: Create tools directory
+      file:
+      path: ~/tools
+      state: directory
+
+    - name: Clone pwndbg
+      git:
+        repo: https://github.com/pwndbg/pwndbg
+        dest: ~/tools/pwndbg
+        clone: yes
+        update: yes
+
+    - name: Running pwndbg installation script
+      shell:
+        cmd: ~/tools/pwndbg/setup.sh
+
+    - name: Clone ghidra-dark
+      git:
+        repo: https://github.com/zackelia/ghidra-dark
+        dest: ~/tools/ghidra-dark
+        clone: yes
+        update: yes
+
+    - name: Installing pwntools and z3-solver
+      pip:
+        name:
+        - pwntools
+        - z3-solver
+
+    - name: Installing one_gadget
+      become: True
+      gem:
+        name: one_gadget
+        state: present
+
+    - name: Downloading jetbrains toolbox app
+      get_url:
+        url: https://www.jetbrains.com/toolbox-app/download/download-thanks.html?platform=linux
+        dest: ~/Downloads/jetbrains_toolbox.tar.gz
+
+    - name: Extract jetbrains toolbox to /opt
+      become: True
+      shell:
+        cmd: sudo tar -xzf jetbrains-toolbox-1.17.7391.tar.gz -C /opt
+
+    - name: Create Projects directory
+      file:
+        path: ~/Projects
+        state: directory
+          
+    - name: Get dotfiles directory
+      git:
+        repo: git@github.com:sioel0/dotfiles
+        dest: ~/Projects/dotfiles
+        clone: yes
+        update: yes
+
+    - name: Add dotfiles
+      shell:
+        cmd: ~/Projects/dotfiles/install.sh
+
+    - name: Install neovim packer
+      git:
+        repo: https://github.com/wbthomason/packer.neovim
+        dest: ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+        clone: yes
+        update: yes
+
+    - name: Add neovim configuration
+      git:
+        repo: git@github.com:sioel0/slnvim
+        dest: ~/.config/nvim
+        clone: yes
+        update: yes
+
+    - name: DOWNLOAD BY HAND
+      debug:
+        msg: pwninit, ghidra, radare2, duplicati
+
