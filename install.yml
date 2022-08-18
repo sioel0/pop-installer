@@ -154,7 +154,11 @@
     - name: Extract jetbrains toolbox to /opt
       become: True
       shell:
-        cmd: sudo tar -xzf jetbrains-toolbox-1.17.7391.tar.gz -C /opt
+        cmd: sudo tar -xzf ~/Downloads/jetbrains_toolbox.tar.gz -C /opt
+
+    - name: Install jetbrains_toolbox
+      shell:
+        cmd: /opt/jetbrains_toolbox/jetbrains_toolbox
 
     - name: Create Projects directory
       file:
