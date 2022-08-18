@@ -117,8 +117,8 @@
 
     - name: Create tools directory
       file:
-      path: ~/tools
-      state: directory
+        path: ~/tools
+        state: directory
 
     - name: Clone pwndbg
       git:
@@ -126,10 +126,6 @@
         dest: ~/tools/pwndbg
         clone: yes
         update: yes
-
-    - name: Running pwndbg installation script
-      shell:
-        cmd: ~/tools/pwndbg/setup.sh
 
     - name: Clone ghidra-dark
       git:
@@ -193,4 +189,8 @@
     - name: DOWNLOAD BY HAND
       debug:
         msg: pwninit, ghidra, radare2, duplicati
+
+    - name: SETUP BY HAND
+      debug:
+        msg: toolbox, pwndbg, ghidra-dark
 
