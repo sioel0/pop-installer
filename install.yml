@@ -54,6 +54,7 @@
         - ripgrep
         - thunderbird
         - gnome-tweaks
+        - alacritty
         - net-tools
         - wireshark
         - tshark
