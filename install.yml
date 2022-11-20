@@ -115,25 +115,6 @@
       shell:
         cmd: curl -sS https://starship.rs/install.sh | sh -s -- -y
 
-    - name: Create tools directory
-      file:
-        path: ~/tools
-        state: directory
-
-    - name: Clone pwndbg
-      git:
-        repo: https://github.com/pwndbg/pwndbg
-        dest: ~/tools/pwndbg
-        clone: yes
-        update: yes
-
-    - name: Clone ghidra-dark
-      git:
-        repo: https://github.com/zackelia/ghidra-dark
-        dest: ~/tools/ghidra-dark
-        clone: yes
-        update: yes
-
     - name: Installing pwntools and z3-solver
       pip:
         name:
@@ -145,20 +126,6 @@
       gem:
         name: one_gadget
         state: present
-
-    - name: Downloading jetbrains toolbox app
-      get_url:
-        url: https://www.jetbrains.com/toolbox-app/download/download-thanks.html?platform=linux
-        dest: ~/Downloads/jetbrains_toolbox.tar.gz
-
-    - name: Extract jetbrains toolbox to /opt
-      become: True
-      shell:
-        cmd: sudo tar -xzf ~/Downloads/jetbrains_toolbox.tar.gz -C /opt
-
-    - name: Install jetbrains_toolbox
-      shell:
-        cmd: /opt/jetbrains_toolbox/jetbrains_toolbox
 
     - name: Create Projects directory
       file:
@@ -176,25 +143,9 @@
       shell:
         cmd: ~/Projects/dotfiles/install.sh
 
-    - name: Install neovim packer
-      git:
-        repo: https://github.com/wbthomason/packer.neovim
-        dest: ~/.local/share/nvim/site/pack/packer/start/packer.nvim
-        clone: yes
-        update: yes
-
     - name: Add neovim configuration
       git:
         repo: git@github.com:sioel0/slnvim
         dest: ~/.config/nvim
         clone: yes
         update: yes
-
-    - name: DOWNLOAD BY HAND
-      debug:
-        msg: pwninit, ghidra, radare2, duplicati
-
-    - name: SETUP BY HAND
-      debug:
-        msg: toolbox, pwndbg, ghidra-dark
-
