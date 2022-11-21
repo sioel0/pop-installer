@@ -150,3 +150,27 @@
         dest: ~/.config/nvim
         clone: yes
         update: yes
+
+    - name: Set nvim as git editor
+      git_config:
+        name: core.editor
+        scope: global
+        value: nvim
+
+    - name: Set git user.name
+      git_config:
+        name: user.name
+        scope: global
+        value: {{username}}
+
+    - name: Set git user.email
+      git_config:
+        name: user.email
+        scope: global
+        value: {{email}}
+
+    - name: Git signs commits using gpgkey
+      git_config:
+        name: commit.gpgsign
+        scope: global
+        value: True
